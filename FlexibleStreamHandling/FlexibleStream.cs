@@ -5,16 +5,16 @@ namespace FlexibleStreamHandling
 {
     public abstract class FlexibleStream : IDisposable
     {
-        protected Stream Stream;
+        protected abstract Stream Stream { get; }
+
         protected StreamWriter StreamWriter;
         protected bool Disposed;
         /// <summary>
         /// Wraps MemoryStream and FileStream classes to provide a StreamReader
         /// </summary>
         /// <param name="stream"></param>
-        public FlexibleStream(Stream stream)
+        public FlexibleStream()
         {
-            Stream = stream;
         }
 
         public StreamReader GetReader()

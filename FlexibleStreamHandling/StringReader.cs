@@ -8,11 +8,11 @@ namespace FlexibleStreamHandling
     public class StringReader : FlexibleStream
     {
         private readonly string _fileName;
+        private MemoryStream _memoryStream;
 
         public StringReader() : this("") {}
 
         public StringReader(string contents, string fileName = "test")
-            : base(new MemoryStream())
         {
             _fileName = fileName;
             Write(contents);
@@ -22,5 +22,7 @@ namespace FlexibleStreamHandling
         {
             return _fileName;
         }
+
+        protected override Stream Stream => _memoryStream ?? (_memoryStream = new MemoryStream());
     }
 }
