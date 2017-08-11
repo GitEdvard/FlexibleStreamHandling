@@ -4,15 +4,19 @@ namespace FlexibleStreamHandling
 {
     public class FileIOStream : FlexibleStream
     {
-        private string _filePath;
+        private readonly string _filePath;
+        private readonly FileMode _fileMode;
+        private readonly FileAccess _fileAccess;
+        private FileStream _fileStream;
         public bool DeleteWhenReady { get; set; }
 
         public FileIOStream(string filePath, 
             FileMode fileMode = FileMode.Open, 
-            FileAccess fileAccess = FileAccess.Read):
-            base(new FileStream(filePath, fileMode, fileAccess))
+            FileAccess fileAccess = FileAccess.Read)
         {
             _filePath = filePath;
+            _fileMode = fileMode;
+            _fileAccess = fileAccess;
         }
 
         public override string GetFileName()
@@ -31,5 +35,8 @@ namespace FlexibleStreamHandling
                 File.Delete(_filePath);
             }
         }
+
+        protected override Stream Stream => _fileStream 
+            ?? (_fileStream = new FileStream(_filePath, _fileMode, _fileAccess));
     }
 }
