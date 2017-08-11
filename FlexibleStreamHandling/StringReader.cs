@@ -1,4 +1,5 @@
 using System.IO;
+using System.Text;
 
 namespace FlexibleStreamHandling
 {
@@ -23,6 +24,8 @@ namespace FlexibleStreamHandling
             return _fileName;
         }
 
-        protected override Stream Stream => _memoryStream ?? (_memoryStream = new MemoryStream());
+        protected override Stream WriteStream => _memoryStream ?? (_memoryStream = new MemoryStream());
+        public override Stream ReadStream => _memoryStream ?? (_memoryStream = new MemoryStream());
+        public override Encoding Encoding => Encoding.UTF8;
     }
 }

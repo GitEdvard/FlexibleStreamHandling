@@ -1,22 +1,24 @@
 using System.IO;
+using System.Text;
 
 namespace FlexibleStreamHandling
 {
     public class FileIOStream : FlexibleStream
     {
         private readonly string _filePath;
-        private readonly FileMode _fileMode;
-        private readonly FileAccess _fileAccess;
-        private FileStream _fileStream;
+        private readonly FileMode _fileModeForWrite;
+        private FileStream _writeStream;
+        private FileStream _readStream;
+        private Encoding _encoding;
         public bool DeleteWhenReady { get; set; }
 
-        public FileIOStream(string filePath, 
-            FileMode fileMode = FileMode.Open, 
-            FileAccess fileAccess = FileAccess.Read)
+        public FileIOStream(string filePath,
+            Encoding encodingForWrite = null,
+            FileMode fileModeForWrite = FileMode.Create)
         {
             _filePath = filePath;
-            _fileMode = fileMode;
-            _fileAccess = fileAccess;
+            _fileModeForWrite = fileModeForWrite;
+            _encoding = encodingForWrite;
         }
 
         public override string GetFileName()
@@ -36,7 +38,12 @@ namespace FlexibleStreamHandling
             }
         }
 
-        protected override Stream Stream => _fileStream 
-            ?? (_fileStream = new FileStream(_filePath, _fileMode, _fileAccess));
+        protected override Stream WriteStream => _writeStream 
+            ?? (_writeStream = new FileStream(_filePath, _fileModeForWrite, FileAccess.Write));
+
+        public override Stream ReadStream => _readStream 
+            ?? (_readStream = new FileStream(_filePath, FileMode.Open, FileAccess.Read));
+
+        public override Encoding Encoding => _encoding ?? (_encoding = Encoding.UTF8);
     }
 }

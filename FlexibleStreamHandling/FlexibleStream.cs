@@ -1,11 +1,16 @@
 using System;
 using System.IO;
+using System.Text;
 
 namespace FlexibleStreamHandling
 {
     public abstract class FlexibleStream : IDisposable
     {
-        protected abstract Stream Stream { get; }
+        protected abstract Stream WriteStream { get; }
+
+        public abstract Stream ReadStream { get; }
+
+        public abstract Encoding Encoding { get; }
 
         protected StreamWriter StreamWriter;
         protected bool Disposed;
@@ -20,37 +25,49 @@ namespace FlexibleStreamHandling
         public StreamReader GetReader()
         {
             Flush();
-            Stream.Position = 0;
-            return new StreamReader(Stream);
+            ReadStream.Position = 0;
+            return new StreamReader(ReadStream);
         }
 
         private void Flush()
         {
-            if (StreamWriter != null)
-            {
-                StreamWriter.Flush();
-            }
+            StreamWriter?.Flush();
+            ReadStream?.Flush();
         }
-
+        [Obsolete]
         public Stream GetStream()
         {
             Flush();
-            Stream.Position = 0;
-            return Stream;
+            WriteStream.Position = 0;
+            return WriteStream;
+        }
+
+        public Stream GetWriteStream()
+        {
+            Flush();
+            WriteStream.Position = 0;
+            return WriteStream;
+        }
+
+        public Stream GetReadStream()
+        {
+            Flush();
+            ReadStream.Position = 0;
+            return ReadStream;
         }
 
         public abstract string GetFileName();
 
         public long SizeMB
         {
-            get { return Stream.Length/1000000; }
+            get { return ReadStream.Length/1000000; }
         }
 
         private void InitWriter()
         {
             if (StreamWriter == null)
             {
-                StreamWriter = new StreamWriter(Stream);
+                StreamWriter = new StreamWriter(WriteStream, Encoding);
             }            
         }
 
@@ -78,10 +95,8 @@ namespace FlexibleStreamHandling
 
             Flush();
 
-            if (Stream != null)
-            {
-                Stream.Close();
-            }
+            WriteStream?.Close();
+            ReadStream?.Close();
             Disposed = true;
         }
     }
