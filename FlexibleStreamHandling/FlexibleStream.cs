@@ -1,12 +1,11 @@
 using System;
 using System.IO;
+using System.Text;
 
 namespace FlexibleStreamHandling
 {
     public abstract class FlexibleStream : IDisposable
     {
-        protected abstract Stream Stream { get; }
-
         protected StreamWriter StreamWriter;
         protected bool Disposed;
         /// <summary>
@@ -17,6 +16,9 @@ namespace FlexibleStreamHandling
         {
         }
 
+        public abstract Stream Stream { get; }
+
+        public abstract string Path { get; }
         public StreamReader GetReader()
         {
             Flush();
@@ -34,8 +36,6 @@ namespace FlexibleStreamHandling
 
         public Stream GetStream()
         {
-            Flush();
-            Stream.Position = 0;
             return Stream;
         }
 
@@ -50,7 +50,7 @@ namespace FlexibleStreamHandling
         {
             if (StreamWriter == null)
             {
-                StreamWriter = new StreamWriter(Stream);
+                StreamWriter = new StreamWriter(Stream, Encoding.GetEncoding(1252));
             }            
         }
 
@@ -66,6 +66,8 @@ namespace FlexibleStreamHandling
             StreamWriter.Write(text);
         }
 
+        protected abstract void CloseStream();
+
         public void Dispose()
         {
             Dispose(true);
@@ -77,11 +79,8 @@ namespace FlexibleStreamHandling
                 return;
 
             Flush();
+            CloseStream();
 
-            if (Stream != null)
-            {
-                Stream.Close();
-            }
             Disposed = true;
         }
     }
