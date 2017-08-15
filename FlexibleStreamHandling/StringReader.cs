@@ -23,7 +23,8 @@ namespace FlexibleStreamHandling
             return _fileName;
         }
 
-        protected override Stream Stream => _memoryStream ?? (_memoryStream = new MemoryStream());
+        public override Stream Stream => _memoryStream ?? (_memoryStream = new MemoryStream());
+        public override string Path => $@"c:\{_fileName}";
         protected override void CloseStream()
         {
             Stream.Close();

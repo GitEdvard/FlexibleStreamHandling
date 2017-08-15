@@ -1,11 +1,11 @@
 using System;
 using System.IO;
+using System.Text;
 
 namespace FlexibleStreamHandling
 {
     public abstract class FlexibleStream : IDisposable
     {
-
         protected StreamWriter StreamWriter;
         protected bool Disposed;
         /// <summary>
@@ -17,6 +17,8 @@ namespace FlexibleStreamHandling
         }
 
         public abstract Stream Stream { get; }
+
+        public abstract string Path { get; }
         public StreamReader GetReader()
         {
             Flush();
@@ -65,6 +67,7 @@ namespace FlexibleStreamHandling
         }
 
         protected abstract void CloseStream();
+
         public void Dispose()
         {
             Dispose(true);

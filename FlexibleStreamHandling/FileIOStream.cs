@@ -21,7 +21,7 @@ namespace FlexibleStreamHandling
 
         public override string GetFileName()
         {
-            return Path.GetFileName(_filePath);
+            return System.IO.Path.GetFileName(_filePath);
         }
 
         protected override void Dispose(bool disposing)
@@ -36,8 +36,10 @@ namespace FlexibleStreamHandling
             }
         }
 
-        protected override Stream Stream => _fileStream 
+        public override Stream Stream => _fileStream 
             ?? (_fileStream = new FileStream(_filePath, _fileMode, _fileAccess));
+
+        public override string Path => _filePath;
         protected override void CloseStream()
         {
             _fileStream?.Close();
