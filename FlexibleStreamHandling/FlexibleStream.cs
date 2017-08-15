@@ -5,7 +5,6 @@ namespace FlexibleStreamHandling
 {
     public abstract class FlexibleStream : IDisposable
     {
-        protected abstract Stream Stream { get; }
 
         protected StreamWriter StreamWriter;
         protected bool Disposed;
@@ -17,6 +16,7 @@ namespace FlexibleStreamHandling
         {
         }
 
+        public abstract Stream Stream { get; }
         public StreamReader GetReader()
         {
             Flush();
@@ -34,8 +34,6 @@ namespace FlexibleStreamHandling
 
         public Stream GetStream()
         {
-            Flush();
-            Stream.Position = 0;
             return Stream;
         }
 
@@ -66,6 +64,7 @@ namespace FlexibleStreamHandling
             StreamWriter.Write(text);
         }
 
+        protected abstract void CloseStream();
         public void Dispose()
         {
             Dispose(true);
@@ -77,11 +76,8 @@ namespace FlexibleStreamHandling
                 return;
 
             Flush();
+            CloseStream();
 
-            if (Stream != null)
-            {
-                Stream.Close();
-            }
             Disposed = true;
         }
     }

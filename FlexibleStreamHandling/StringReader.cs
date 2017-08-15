@@ -24,5 +24,9 @@ namespace FlexibleStreamHandling
         }
 
         protected override Stream Stream => _memoryStream ?? (_memoryStream = new MemoryStream());
+        protected override void CloseStream()
+        {
+            Stream.Close();
+        }
     }
 }

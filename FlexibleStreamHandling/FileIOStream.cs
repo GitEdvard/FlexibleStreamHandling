@@ -38,5 +38,9 @@ namespace FlexibleStreamHandling
 
         protected override Stream Stream => _fileStream 
             ?? (_fileStream = new FileStream(_filePath, _fileMode, _fileAccess));
+        protected override void CloseStream()
+        {
+            _fileStream?.Close();
+        }
     }
 }
