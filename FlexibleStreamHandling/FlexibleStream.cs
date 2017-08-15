@@ -50,7 +50,7 @@ namespace FlexibleStreamHandling
         {
             if (StreamWriter == null)
             {
-                StreamWriter = new StreamWriter(Stream);
+                StreamWriter = new StreamWriter(Stream, Encoding.GetEncoding(1252));
             }            
         }
 
