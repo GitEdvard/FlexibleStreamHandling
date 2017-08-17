@@ -29,5 +29,12 @@ namespace FlexibleStreamHandling
         {
             Stream.Close();
         }
+
+        public override void ReOpenAs(FileMode fileMode, FileAccess fileAccess)
+        {
+            Dispose();
+            _memoryStream = null;
+            Disposed = false;
+        }
     }
 }
