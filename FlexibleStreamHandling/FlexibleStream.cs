@@ -68,6 +68,8 @@ namespace FlexibleStreamHandling
 
         protected abstract void CloseStream();
 
+        public abstract void ReOpenAs(FileMode fileMode, FileAccess fileAccess);
+
         public void Dispose()
         {
             Dispose(true);

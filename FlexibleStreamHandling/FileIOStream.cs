@@ -5,8 +5,8 @@ namespace FlexibleStreamHandling
     public class FileIOStream : FlexibleStream
     {
         private readonly string _filePath;
-        private readonly FileMode _fileMode;
-        private readonly FileAccess _fileAccess;
+        private FileMode _fileMode;
+        private FileAccess _fileAccess;
         private FileStream _fileStream;
         public bool DeleteWhenReady { get; set; }
 
@@ -43,6 +43,16 @@ namespace FlexibleStreamHandling
         protected override void CloseStream()
         {
             _fileStream?.Close();
+        }
+
+        public override void ReOpenAs(FileMode fileMode, FileAccess fileAccess)
+        {
+            _fileMode = fileMode;
+            _fileAccess = fileAccess;
+            Dispose();
+            _fileStream = null;
+            Disposed = false;
+
         }
     }
 }
